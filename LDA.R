@@ -17,7 +17,6 @@ x<-c(xverde,xrojo)
 y<-c(yverde,yrojo)
 z<-c(zverde,zrojo)
 colores<-c(rep("green",N/2),rep("red",N/2))
-
 data= as.data.frame(etiq)
 data$x = x
 data$y = y
@@ -37,9 +36,8 @@ zdiv = (mean(zverde)+ mean(zrojo))/2
 punto_div = c(xdiv, ydiv, zdiv)
 proj = project(punto_div ~ vec_lda_escalado)
 projec_lda  = vec_lda_escalado * proj  
-projec_lda
 
-#Gráfico 3D
+#GrÃ¡fico 3D
 lim = c(0,1)
 plot3d(mean(xverde), mean(yverde), mean(zverde), col = "blue", size = 15, xlim = lim, ylim = lim, zlim = lim) #media verdes
 plot3d(mean(xrojo), mean(yrojo), mean(zrojo), col = "blue", size = 15, xlim = lim, ylim = lim, zlim = lim) #media rojos
@@ -48,7 +46,7 @@ plot3d(x, y, z, col = colores, size = 5, xlim = lim, ylim = lim, zlim = lim) #da
 arrow3d(p0=c(vec_lda_escalado), p1=c(0,0,0),type="lines",barblen = 0.05,col="purple") #vector LDA
 
 
-#Ahora genero datos con una dispersión distinta en z
+#Ahora genero datos con una dispersiÃ³n distinta en z
 rm(list=ls())
 set.seed(1)
 N = 200 
@@ -63,7 +61,6 @@ x1<-c(xverde1,xrojo1)
 y1<-c(yverde1,yrojo1)
 z1<-c(zverde1,zrojo1)
 colores<-c(rep("green",N/2),rep("red",N/2))
-
 data= as.data.frame(etiq)
 data$x = x1
 data$y = y1
@@ -84,19 +81,19 @@ punto_div = c(xdiv, ydiv, zdiv)
 proj = project(punto_div ~ vec_lda_escalado)
 projec_lda  = vec_lda_escalado * proj  
 
-#Dirección que maximiza diferencia entre medias
+#DirecciÃ³n que maximiza diferencia entre medias
 vec_dif_medias = (c(mean(xrojo1)- mean(xverde1), mean(yrojo1)- mean(yverde1), mean(zrojo1)- mean(zverde1)))
 
-#Gráfico 3D
+#GrÃ¡fico 3D
 lim = c(-1, 1.6)
 rgl.open()
 bg3d(color = "white")
-plot3d(mean(xverde1), mean(yverde1), mean(zverde1), col = "blue", size = 10, xlim = lim, ylim = lim,zlim= lim)
-plot3d(mean(xrojo1), mean(yrojo1), mean(zrojo1), col = "blue", size = 10, xlim = lim, ylim = lim,zlim= lim)
-plot3d(projec_lda[1], projec_lda[2], projec_lda[3], col = "purple", size = 10, xlim = lim, ylim = lim,zlim= lim)
-plot3d(x1, y1, z1, col = colores, size = 5, xlim = lim, ylim = lim, zlim = lim)
-arrow3d(p0=c(0,0,0), p1=c( vec_lda_escalado),type="lines", barblen = 0.05, col="purple")
-arrow3d(p0=c(0,0,0), p1=c(vec_dif_medias*3),type="lines",barblen = 0.05, col="yellow")
+plot3d(mean(xverde1), mean(yverde1), mean(zverde1), col = "blue", size = 10, xlim = lim, ylim = lim,zlim= lim) #media verdes
+plot3d(mean(xrojo1), mean(yrojo1), mean(zrojo1), col = "blue", size = 10, xlim = lim, ylim = lim,zlim= lim) #media rojos
+plot3d(projec_lda[1], projec_lda[2], projec_lda[3], col = "purple", size = 10, xlim = lim, ylim = lim,zlim= lim) #punto de corte
+plot3d(x1, y1, z1, col = colores, size = 5, xlim = lim, ylim = lim, zlim = lim) #datos
+arrow3d(p0=c(0,0,0), p1=c( vec_lda_escalado),type="lines", barblen = 0.05, col="purple") #vector LDA
+arrow3d(p0=c(0,0,0), p1=c(vec_dif_medias*3),type="lines",barblen = 0.05, col="yellow") #vector diferencia de medias
 
 #Proyecto los datos sobre direccion que solo maximiza diferencia entre medias
 vec_dif_medias
@@ -110,7 +107,7 @@ proy_dif_medias = apply(data,1, proy_m)
 data$proy_dif_medias = proy_dif_medias
 p_corte = project(punto_div ~ vec_dif_medias)
 
-#Gráfico
+#GrÃ¡fico
 g <- ggplot(data, aes(x=proy_dif_medias, fill = as.factor(etiq)))
 g+ geom_dotplot(alpha=0.4)+
   geom_vline(xintercept = p_corte)+
@@ -126,10 +123,10 @@ proy_lda = function(df){
 
 proy_vec_lda = apply(data,1, proy_lda) 
 data$proy_vec_lda = proy_vec_lda*-1 
-#(invierto la dirección del vecotr para que queden primero los verdes y luego los rojos, como en el gráfico anterior)
+#(invierto la direcciÃ³n del vecotr para que queden primero los verdes y luego los rojos, como en el grÃ¡fico anterior)
 punto_corte_lda = project(punto_div ~ vec_lda)
 
-#Gráfico
+#GrÃ¡fico
 g <- ggplot(data, aes(x = proy_vec_lda, fill = as.factor(etiq)))
 g+ geom_dotplot(alpha=0.4)+
   scale_fill_manual(values = c("red", "green"))+
